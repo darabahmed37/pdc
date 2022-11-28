@@ -2,7 +2,6 @@
 #include <mpi.h>
 #include <bits/stdc++.h>
 
-#define B_Cast(buffer)   MPI_Bcast(&buffer, 1, MPI_INT, 0, MPI_COMM_WORLD);
 using namespace std;
 
 void initialize(int number, int array[]) {
@@ -27,6 +26,15 @@ void mark(const int array[], int marked[], int end, int number) {
     }
 }
 
+void printMarked(int *array, const int *marked, int size) {
+    for (int i = 0; i < size; ++i) {
+        if (!marked[i]) {
+            printf("%d\t", array[i]);
+        }
+    }
+    cout << endl;
+}
+
 int main(int argc, char *argv[]) {
     int P = 4, rank;
     MPI_Init(&argc, &argv);
@@ -44,8 +52,10 @@ int main(int argc, char *argv[]) {
             MPI_Send(&start, 1, MPI_INT, i, i, MPI_COMM_WORLD);
         }
         for (int i = 0; i < cluster_size; ++i) {
+            MPI_Bcast(array + i, 1, MPI_INT, 0, MPI_COMM_WORLD);
             mark(array, marked, cluster_size, array[i]);
-            B_Cast(array[i]);
+
+
         }
         delete[] marked;
         MPI_Finalize();
@@ -58,12 +68,16 @@ int main(int argc, char *argv[]) {
     MPI_Recv(&start, 1, MPI_INT, 0, rank, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
     for (int i = start; i < start + cluster_size; ++i) {
-        B_Cast(buffer);
+        MPI_Bcast(&buffer, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        int end = (cluster_size * rank) + cluster_size;
+        mark(array, marked, end, buffer);
 
 
     }
 
-    printArray(marked, array_size);
+    if (rank == P - 1) {
+        printMarked(array, marked, array_size);
+    }
     delete[] marked;
     MPI_Finalize();
     return 0;
