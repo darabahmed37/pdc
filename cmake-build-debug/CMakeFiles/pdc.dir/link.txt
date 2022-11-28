@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,-Bsymbolic-functions CMakeFiles/pdc.dir/main.cpp.o -o pdc  /usr/lib/x86_64-linux-gnu/libmpichcxx.so /usr/lib/x86_64-linux-gnu/libmpich.so 

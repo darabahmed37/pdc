@@ -1,0 +1,3 @@
+/mnt/c/Users/darab/CLionProjects/pdc/cmake-build-debug/CMakeFiles/pdc.dir
+/mnt/c/Users/darab/CLionProjects/pdc/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/c/Users/darab/CLionProjects/pdc/cmake-build-debug/CMakeFiles/rebuild_cache.dir
