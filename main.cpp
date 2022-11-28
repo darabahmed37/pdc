@@ -2,6 +2,7 @@
 #include <mpi.h>
 #include <bits/stdc++.h>
 
+#define B_Cast(buffer)   MPI_Bcast(&buffer, 1, MPI_INT, 0, MPI_COMM_WORLD);
 using namespace std;
 
 void initialize(int number, int array[]) {
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
     int array_size = stoi(argv[1]) - 1;
     int array[array_size];
     int *marked = new int[array_size]{0};
-    int cluster_size = array_size % P;
+    int cluster_size = array_size / P;
 
     initialize(array_size, array);
     if (rank == 0) {
@@ -44,21 +45,25 @@ int main(int argc, char *argv[]) {
         }
         for (int i = 0; i < cluster_size; ++i) {
             mark(array, marked, cluster_size, array[i]);
-            MPI_Bcast(array + i, 1, MPI_INT, 0, MPI_COMM_WORLD);
+            B_Cast(array[i]);
         }
-
         delete[] marked;
         MPI_Finalize();
         return 0;
+
     }
 
-    int buffer;
-    for (int i = 0; i < ; ++i) {
-        
+    int start = 0, buffer = 0;
+
+    MPI_Recv(&start, 1, MPI_INT, 0, rank, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+    for (int i = start; i < start + cluster_size; ++i) {
+        B_Cast(buffer);
+
+
     }
-    MPI_Bcast(&buffer, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    mark(array, marked, rank * cluster_size, buffer);
-    cout << buffer << endl;
+
+    printArray(marked, array_size);
     delete[] marked;
     MPI_Finalize();
     return 0;
